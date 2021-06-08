@@ -92,3 +92,63 @@ For a more efficient calculation, the input substring is first split into substr
 
 Complexity: O(n)
 
+## [Diluc and Kaeya](https://codeforces.com/contest/1536/problem/C)
+
+To understand the solution to this problem, it is best to start disassembling it in geometric form. Let the vertical axis be the number of *K* characters, the horizontal axis the number of *D* characters. For each of the prefixes, draw points in accordance with the axes and connect them to each other. Next, from the origin, draw a line to each point.
+
+Example for string: `DKDKDDDDK`. Lines from the origin are drawn only for important points (the rest are simplified for the sake of simplicity of the graph)
+
+![plot](img/plot.png?raw=true)
+
+You can notice that the number of parts into which the string can be divided so that the ratio of characters in it is the same is equal to the number of points that the line crosses from the origin to the prefix point (including it).
+
+Thus, the following conclusion can be drawn: for each prefix, label it with a pair `(a,b)` where *a* = frequency of *D* in this prefix and *b* = frequency of *K* in this prefix. Divide *a* and *b* by `gcd(a,b)`. If we iterate over all prefixes from to left, we can notice that the answer for the prefix equals the # of occurrences of this pair we have seen so far!
+
+So, this can be realized with this code:
+
+        HashMap<String, Integer> map = new HashMap<>();
+        StringBuilder sb = new StringBuilder();
+        int d = 0;
+        int k = 0;
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == 'D') {
+                d++;
+            } else {
+                k++;
+            }
+            String ratio = getRatio(d, k);
+            map.put(ratio, map.containsKey(ratio) ? map.get(ratio) + 1 : 1);
+            sb.append(map.get(ratio)).append(" ");
+        }
+        return sb.toString();
+
+Where ratio is found like this:
+
+    private static String getRatio(final int d, final int k) {
+        int a = d;
+        int b = k;
+
+        if (a == 0) {
+            b = 1;
+        } else if (b == 0) {
+            a = 1;
+        } else {
+            int gcd = gcd(a, b);
+            a /= gcd;
+            b /= gcd;
+        }
+        return a + ":" + b;
+    }
+
+    private static int gcd(int a, int b) {
+        if (a > b) {
+            int temp = a;
+            a = b;
+            b = temp;
+        }
+
+        return a == 0 ? b : gcd(b % a, a);
+    }
+
+Complexity: O(n)
+
