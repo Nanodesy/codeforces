@@ -45,3 +45,27 @@ Finally, we will find the minimum value of the three calculated options:
 
 Complexity: O(n)
 
+## [Friends and Candies](https://codeforces.com/contest/1538/problem/B)
+
+Since we need to make sure that all friends have the same number of candies, we need to find the median (arithmetic mean) of all candies.
+
+    double median = Arrays.stream(array).average().orElseThrow();
+    
+Further, it is logical to assume that if the median value is not a positive integer number, then we will not be able to solve the problem (we cannot crush candies, which means that someone will obviously get more candies). This is the only situation in which we cannot solve the problem, which means that we output `-1` in the answer (by condition)
+
+    if (Math.ceil(median) != median) {  
+        return -1;  
+    }
+
+Logically, we cannot take sweets from those who have them and there is less than the average value (we strive to ensure that the number of sweets is the same for everyone, which means this value is the median). Therefore, we select only those people who have more than the median number of candies.
+
+    int counter = 0;  
+    for (int n : array) {  
+        if (n > median)  
+            counter++;  
+    }  
+      
+    return counter;
+
+Complexity: O(2n) ≈ O(n)
+
