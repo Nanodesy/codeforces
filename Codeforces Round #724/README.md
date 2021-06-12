@@ -152,3 +152,29 @@ Where ratio is found like this:
 
 Complexity: O(n)
 
+## [Omkar and Medians](https://codeforces.com/contest/1536/problem/D)
+
+The main idea of ​​the problem is to deal with the restrictions imposed on us by adding a new element (or changing the position of the old one) as a median. Knowing the position of the median, we have only a few positions for the new element to become the median:
+
+1. Past median position
+2. Position to the left of the median position, provided that the new selected value is greater than or equal to the value to the left of the median.
+3. Position to the right of the median, provided that the new value is less than or equal to the value to the right of the median.
+
+The first case is straightforward. We add some abstract numbers (abstract because we want to be able to add values ​​both before and after this abstract value) from the left and right edges.
+
+The second case can be broken down into two sub-situations:
+- If our value is greater than the value of the element to the left of the median, then we need to add our value to the left of the median, as well as add an abstract value from the left edge.
+- If our value is equal to the value of the element to the left of the median, then in order to shift this element to the median position, we need to add two abstract elements from the left edge.
+
+The opposite logic works for the third case as well.
+
+If we implement this task through a doubly linked list, in which we always have a link to the median element, then everything becomes simpler, since we can simply not add abstract values ​​(they will not play their role in this task, since we can imagine that this value is equal to infinity).
+
+Let's revise our cases in the format of working with a doubly linked list:
+
+1. If the previous position is median, then we do nothing.
+2. If our value is greater than the left element of the median, then we add this value; if the value is equal, then we simply shift the median cursor to the left (the variable storing the link to the current median is overwritten by the left node).
+3. The same as in the 2nd point, but opposite.
+
+Complexity: O(n)
+
