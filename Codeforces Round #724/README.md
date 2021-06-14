@@ -1,5 +1,8 @@
 # [Codeforces Round #724 (Div. 2)](https://codeforces.com/contest/1536)
 
+Language: Java 11.
+With help of [Codeforces Round #724 — Editorial](https://codeforces.com/blog/entry/91520).
+
 ## [Omkar and Bad Story](https://codeforces.com/contest/1536/problem/A)
 
 We first claim that if any negative number exists in `a`, then no solution exists. Denote `p` as the smallest number in `a` and `q` as another arbitrary number in the array (as `n≥2`, `q` always exists). Clearly, `|q−p|=q−p>0`. However, because `p` is negative, `q−p>q`. As such, adding `q−p` to the output array would create the pair `(q−p,p)` with difference `q−2p>q−p`. We have the same problem as before; thus, it is impossible to create a _nice_ array if there exists a negative number in `a`. 
