@@ -244,14 +244,13 @@ We want to find the number of games that end in x moves on a board of size n.
 
 The first step is to calculate the total number of ending states. If x=n, the total number of ending states is just 2 because you can either have ABABA... or BABAB...
 
-Otherwise, a game that ends in x moves will consist of x letters, for example A|B|A|B|... where a | is a possible location of a single empty cell (there cannot be multiple empty cells next to each other or else it would not be a valid ending state). There are x possible places where there can be an empty cell, and n−x empty cells, so there are $(\begin{smallmatrix}n\\n-x\end{smallmatrix})$ ways to choose places to put empty cells. Due to the circular nature of the board, you need to account for the case where the first cell on the board is an empty cell (the previous formula only works if the first cell is not empty). If you set the first cell to be empty, there are not x−1 possible places to put an empty cell and n−x−1 remaining empty cells, so you have to add $(\begin{smallmatrix}x-1\\n-x-1\end{smallmatrix})$. Multiply the answer by 2 to account for starting with an A or B.
+Otherwise, a game that ends in x moves will consist of x letters, for example A|B|A|B|... where a | is a possible location of a single empty cell (there cannot be multiple empty cells next to each other or else it would not be a valid ending state). There are x possible places where there can be an empty cell, and n−x empty cells, so there are (n | n-x) ways to choose places to put empty cells. Due to the circular nature of the board, you need to account for the case where the first cell on the board is an empty cell (the previous formula only works if the first cell is not empty). If you set the first cell to be empty, there are not x−1 possible places to put an empty cell and n−x−1 remaining empty cells, so you have to add (x-1 | n-x-1). Multiply the answer by 2 to account for starting with an A or B.
 
 Finally, multiply by x! to account for all the ways you can reach each ending configuration.
 
-Thus, if x=n, there are 2⋅x! optimal games, otherwise there are $2\cdot((\begin{smallmatrix}n\\n-x\end{smallmatrix})+(\begin{smallmatrix}x-1\\n-x-1\end{smallmatrix}))\cdot x!$ optimal games.
+Thus, if x=n, there are 2⋅x! optimal games, otherwise there are 2 × ((n | n-x) + (n-x-1)) × x! optimal games.
 
-Add up the number of games that end in x moves for all even x from $\frac{n}{2}$ to n, inclusive.
+Add up the number of games that end in x moves for all even x from [n/2] to n, inclusive.
 
 Complexity: O(n)
-
 
