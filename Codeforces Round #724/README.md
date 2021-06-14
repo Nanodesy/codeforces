@@ -225,3 +225,30 @@ Thus, the implementation of the program solution can be represented as follows:
 
 Complexity: O(nm)
 
+## [Omkar and Akmar](https://codeforces.com/contest/1536/problem/F)
+
+First you need to understand who will win if the two players play optimally. The interesting thing is that 2nd player, Omkar, always wins no matter what either player does. The easiest way to see this is by considering ending states of the board. An ending state with an even number of letters means that the 2nd player wins (because the first player is the next player and there are no more moves), and an ending state with an odd number of letters means that the 1st player wins.
+
+An ending state must be in the form ABABA... or BABA..., where there are 0 or 1 empty cells in between each letter and the letters form an alternating pattern. If there is more than 1 empty cell in between two cells, then a player will be able to play a letter, thus it is not a valid ending state.
+
+If an ending state has two of the same letters next to each other, then it is not a valid ending state. Either they are next to each other, which is illegal, or there is at least one empty cell in between them, which means that a player can play the other letter in between.
+
+Since the ending state must form an alternating pattern, there must be an even number of states. Thus, the 2nd player, Omkar, always wins. 
+
+In this situation, we need to directly find the number of possible games. This can be done by iterating over the number of moves and counting the number of ways to play a game with that number of moves.
+
+We want to find the number of games that end in x moves on a board of size n.
+
+The first step is to calculate the total number of ending states. If x=n, the total number of ending states is just 2 because you can either have ABABA... or BABAB...
+
+Otherwise, a game that ends in x moves will consist of x letters, for example A|B|A|B|... where a | is a possible location of a single empty cell (there cannot be multiple empty cells next to each other or else it would not be a valid ending state). There are x possible places where there can be an empty cell, and n−x empty cells, so there are $(\begin{smallmatrix}n\\n-x\end{smallmatrix})$ ways to choose places to put empty cells. Due to the circular nature of the board, you need to account for the case where the first cell on the board is an empty cell (the previous formula only works if the first cell is not empty). If you set the first cell to be empty, there are not x−1 possible places to put an empty cell and n−x−1 remaining empty cells, so you have to add $(\begin{smallmatrix}x-1\\n-x-1\end{smallmatrix})$. Multiply the answer by 2 to account for starting with an A or B.
+
+Finally, multiply by x! to account for all the ways you can reach each ending configuration.
+
+Thus, if x=n, there are 2⋅x! optimal games, otherwise there are $2\cdot((\begin{smallmatrix}n\\n-x\end{smallmatrix})+(\begin{smallmatrix}x-1\\n-x-1\end{smallmatrix}))\cdot x!$ optimal games.
+
+Add up the number of games that end in x moves for all even x from $\frac{n}{2}$ to n, inclusive.
+
+Complexity: O(n)
+
+
