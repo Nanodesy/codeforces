@@ -178,3 +178,50 @@ Let's revise our cases in the format of working with a doubly linked list:
 
 Complexity: O(n)
 
+## [Omkar and Forest](https://codeforces.com/contest/1536/problem/E)
+
+The program itself that needs to be written in order to solve the problem does not cause any particular difficulties, but the solution of this problem is quite difficult.
+
+Imagine picking some subset of ‘#’ and making them 0. Then there is exactly one way to make all the remaining ‘#’ positive integers. To see why, imagine multisource BFS with all 0 as the sources. After the BFS, each ‘#’ will be equal to the minimum distance from itself to any 0 cell. Difference between adjacent cells will be at most 1. Proof can be shown by contradiction: if two cells with difference ≥2 existed, then the larger of these cells is not labeled with the shortest distance to a source (since the distance from the smaller cell +1 will be a better choice). Because of the nature of BFS, we can also ensure the second condition is also satisfied, since the only cells that have no neighbor strictly smaller will be the source cells. This is the only valid assignment because if we make any number larger, there will exist a pair of cells with difference ≥2. If we try to make any number smaller, there will exist a cell with positive karma that has no strictly smaller neighbor.
+
+Understanding this fact gives us the opportunity to say that the number of combinations is the number of placements with repetitions n^k^, where n is the number of elements to permute (in our situation we have two elements - zero and any positive number, since we it does not matter which number it will be, the number of permutations will always be equal to one), and k is the number of positions for permutation (in our case, this is the number #).
+
+But this formula will not work in a situation where there are no zeros in the original data (that is, all elements are #). To do this, subtract 1 from the standard result (obtained by the formula above) (since this is an option in which there are any non-zero numbers in the table, which contradicts the second condition (Assume there is a valid grid with no zero. Then there exists a smallest number x on this grid, with x> 0. The problem states, that for each x> 0 there has to be a neighbor strictly smaller than x. Contradiction, x is already the smallest value.)).
+
+Thus, the implementation of the program solution can be represented as follows:
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(reader.readLine());
+        int T = Integer.parseInt(st.nextToken());
+        while (T-- > 0) {
+            st = new StringTokenizer(reader.readLine());
+            int n = Integer.parseInt(st.nextToken());
+            int m = Integer.parseInt(st.nextToken());
+            long counter = 0;
+            for (int i = 0; i < n; i++) {
+                String s = reader.readLine();
+                for (char c : s.toCharArray()) {
+                    if (c == '#') counter++;
+                }
+            }
+
+            long result = modPow2(counter);
+            if ((long) n * m == counter) {
+                System.out.println(result - 1);
+            } else {
+                System.out.println(result);
+            }
+        }
+    }
+
+    private static long modPow2(long exponent) {
+        long result = 1;
+        while (exponent-- > 0) {
+            result = (result * 2) % 1_000_000_007L;
+        }
+        return result;
+    }
+
+Complexity: O(nm)
+
