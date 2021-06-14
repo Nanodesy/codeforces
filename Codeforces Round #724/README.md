@@ -23,3 +23,72 @@ After we deal with this case, we now claim that `b=[0,1,2,...,100]` is a valid _
 
 Complexity: O(n)
 
+## [Prinzessin der Verurteilung](https://codeforces.com/contest/1536/problem/B)
+
+It is important to understand that having a word length limit of 1000 characters, it makes no sense for us to come up with an algorithm that would iterate over all possible substring sizes, since following the pigeonhole principle, the maximum size of the substring for which we need to search is 3.
+
+To understand this, consider the following example:
+
+- Substring size - 1, number of combinations - 26 (all letters of the English alphabet), maximum number of substrings in the input string: 1000
+- Substring size - 2, number of combinations - 26^2^ = 678, maximum number of substrings in the input string: 999
+- Substring size - 3, number of combinations - 26^3^ = 17576, maximum number of substrings in the input string: 998.
+
+Thus, even without considering that we need to find the minimum substring, we can confidently say that for a substring size of 3, the maximum number of substrings is 998, and the maximum number of possible combinations of a substring of size 3 consisting of English alphabet characters is 17576. Which means that we will definitely get a substring that will not be in the input string.
+
+Thus, the solution boils down to the fact that we first check whether a combination of a substring of size 1 is in the input string (if not, then this is our answer), then substrings of size 2, then substrings of size 3 (at this stage, we will definitely find a substring , which is not in the input line).
+
+    private static String solveTask(String s) {
+        HashSet<String> substrings = new HashSet<>(1000);
+        for (int len = 1; len <= 3; len++) {
+            for (int i = 0; i < s.length() - len + 1; i++) {
+                substrings.add(s.substring(i, i + len));
+            }
+    
+            String stringToFind = findString(substrings, len);
+            if (stringToFind != null) return stringToFind;
+        }
+    
+        throw new IllegalArgumentException("Input string should be less than 1000 characters");
+    }
+
+For a more efficient calculation, the input substring is first split into substrings, which in turn are stored in a HashSet, so that the substrings are received instantly. Searching for substrings in a method is done as follows:
+
+    private static String findString(HashSet<String> substrings, int len) {
+        if (len == 1) {
+            for (char a = 'a'; a <= 'z'; a++) {
+                String stringToFind = String.valueOf(a);
+                if (!substrings.contains(stringToFind)) {
+                    return stringToFind;
+                }
+            }
+        }
+
+        if (len == 2) {
+            for (char a = 'a'; a <= 'z'; a++) {
+                for (char b = 'a'; b <= 'z'; b++) {
+                    String stringToFind = a + "" + b;
+                    if (!substrings.contains(stringToFind)) {
+                        return stringToFind;
+                    }
+                }
+            }
+        }
+
+        if (len == 3) {
+            for (char a = 'a'; a <= 'z'; a++) {
+                for (char b = 'a'; b <= 'z'; b++) {
+                    for (char c = 'a'; c <= 'z'; c++) {
+                        String stringToFind = a + "" + b + "" + c;
+                        if (!substrings.contains(stringToFind)) {
+                            return stringToFind;
+                        }
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+Complexity: O(n)
+
